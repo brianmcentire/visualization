@@ -2797,7 +2797,7 @@
             "uid": "dwBkPih4z"
           },
           "hide": false,
-          "query": "select count(\"relay_state\") * 50 as \"cfm\" from (select last(\"relay_state\") AS \"relay_state\" from \"kasa\" WHERE \"alias\" =~ /Exhaust/  group by \"alias\") where \"relay_state\" = true GROUP BY time(2m) fill(0)",
+          "query": "SELECT COUNT(\"relay_state\") * 50 AS \"cfm\"\nFROM (\n  SELECT LAST(\"relay_state\") AS \"relay_state\"\n  FROM \"kasa\"\n  WHERE \"alias\" =~ /Exhaust/\n    AND time > now() - 5m\n  GROUP BY \"alias\"\n)\nWHERE \"relay_state\" = true\nGROUP BY time(5m) fill(0)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -2809,7 +2809,7 @@
             "uid": "dwBkPih4z"
           },
           "hide": false,
-          "query": "select count(\"blower\") * 1200 as \"hvac\" from (select last(\"blower\") as \"blower\" from \"t9\") where \"blower\" != 'Off' GROUP BY time(2m)  fill(null)",
+          "query": "SELECT COUNT(\"blower\") * 1200 AS \"hvac\"\nFROM (\n  SELECT LAST(\"blower\") AS \"blower\"\n  FROM \"t9\"\n  WHERE time > now() - 5m\n)\nWHERE \"blower\" != 'Off'\nGROUP BY time(5m) fill(0)",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series"
@@ -2838,8 +2838,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT last(\"cfm\") FROM \"sonoff\" WHERE (\"alias\" = 'Smart_Air_Blast_MKII') AND $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
+          "query": "SELECT LAST(\"cfm\") \nFROM \"sonoff\"\nWHERE \"alias\" = 'Smart_Air_Blast_MKII'\n  AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "D",
           "resultFormat": "time_series",
           "select": [
@@ -2888,8 +2888,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "select count(\"relay_state\") * 524 as \"cfm\" from (select last(\"relay_state\") AS \"relay_state\" from \"kasa\" WHERE \"alias\" = 'CR1_Corsi_Rosenthal_Box') where \"relay_state\" = true GROUP BY time(2m) fill(null)",
-          "rawQuery": false,
+          "query": "SELECT last(\"cfm\") \nFROM \"sonoff\" \nWHERE (\"alias\" = 'CR1_Corsi_Rosenthal_Box')\n AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "E",
           "resultFormat": "time_series",
           "select": [
@@ -2938,8 +2938,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "select count(\"relay_state\") * 373 as \"cfm\" from (select last(\"relay_state\") AS \"relay_state\" from \"kasa\" WHERE \"alias\" = 'CR2_PC_Niner') where \"relay_state\" = true GROUP BY time(2m) fill(null)",
-          "rawQuery": false,
+          "query": "SELECT last(\"cfm\") \nFROM \"sonoff\"\nWHERE (\"alias\" = 'CR2_PC_Niner')\n AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "F",
           "resultFormat": "time_series",
           "select": [
@@ -2988,8 +2988,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "select count(\"relay_state\") * 410 as \"cfm\" from (select last(\"relay_state\") AS \"relay_state\" from \"kasa\" WHERE \"alias\" = 'Blast_Mini_MKII') where \"relay_state\" = true GROUP BY time(2m) fill(null)",
-          "rawQuery": false,
+          "query": "SELECT last(\"cfm\") \nFROM \"sonoff\" \nWHERE (\"alias\" = 'Blast_Mini_MKII')\n AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "G",
           "resultFormat": "time_series",
           "select": [
@@ -3038,8 +3038,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT count(\"switch\") * 75 as \"cfm\" FROM (select last(\"switch\") AS \"switch\" from \"ewelink\" WHERE \"name\" = 'Levoit_Air_Purifier') where \"switch\" != 'off' GROUP BY time(2m) fill(null)",
-          "rawQuery": false,
+          "query": "SELECT last(\"cfm\") \nFROM \"sonoff\" \nWHERE (\"alias\" = 'Levoit')\n AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "H",
           "resultFormat": "time_series",
           "select": [
@@ -3088,6 +3088,8 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT last(\"cfm\") \nFROM \"sonoff\" \nWHERE (\"alias\" = 'Blast_Mini_MKII_2')\n AND time > now() - 5m\nGROUP BY time(5m) fill(0)",
+          "rawQuery": true,
           "refId": "K",
           "resultFormat": "time_series",
           "select": [
@@ -3304,7 +3306,7 @@
           "groupBy": [
             {
               "params": [
-                "3m"
+                "2m"
               ],
               "type": "time"
             },
@@ -3352,13 +3354,13 @@
           "groupBy": [
             {
               "params": [
-                "3m"
+                "2m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "null"
+                "previous"
               ],
               "type": "fill"
             }
@@ -3416,7 +3418,7 @@
             },
             {
               "params": [
-                "null"
+                "previous"
               ],
               "type": "fill"
             }
@@ -4653,7 +4655,7 @@
             "uid": "dwBkPih4z"
           },
           "hide": true,
-          "query": "SELECT count(\"relay_state\") * 50 AS \"cfm\"\nFROM (\n  SELECT last(\"relay_state\") AS \"relay_state\"\n  FROM \"kasa\"\n  WHERE \"alias\" =~ /Exhaust/ AND time > now() - 24h\n  GROUP BY \"alias\"\n)\nWHERE \"relay_state\" = true\nGROUP BY time(2m) fill(null)",
+          "query": "SELECT count(\"relay_state\") * 50 AS \"cfm\"\nFROM (\n  SELECT last(\"relay_state\") AS \"relay_state\"\n  FROM \"kasa\"\n  WHERE \"alias\" =~ /Exhaust/ AND time > now() - 24h\n  GROUP BY \"alias\"\n)\nWHERE \"relay_state\" = true\nGROUP BY time(5m) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series"
@@ -4665,7 +4667,7 @@
             "uid": "dwBkPih4z"
           },
           "hide": true,
-          "query": "select count(\"blower\") * 1200 as \"hvac\" from (select last(\"blower\") as \"blower\" from \"t9\") where \"blower\" != 'Off' GROUP BY time(2m)  fill(null)",
+          "query": "select count(\"blower\") * 1200 as \"hvac\" from (select last(\"blower\") as \"blower\" from \"t9\") where \"blower\" != 'Off' GROUP BY time(5m) fill(null)",
           "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series"
@@ -4689,13 +4691,13 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "0"
+                "null"
               ],
               "type": "fill"
             }
@@ -4704,7 +4706,7 @@
           "measurement": "sonoff",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "select count(\"relay_state\") * 1200 as \"cfm\" from (select last(\"relay_state\") AS \"relay_state\" from \"kasa\" WHERE \"alias\" = 'Smart_Air_Blast_MKII') where \"relay_state\" = true GROUP BY time(2m) fill(null)",
+          "query": "SELECT last(\"cfm\") FROM \"sonoff\" WHERE (\"alias\" = 'Smart_Air_Blast_MKII') AND $timeFilter GROUP BY time($__interval) fill(0)",
           "rawQuery": false,
           "refId": "D",
           "resultFormat": "time_series",
@@ -4739,13 +4741,13 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "0"
+                "null"
               ],
               "type": "fill"
             }
@@ -4789,13 +4791,13 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "0"
+                "null"
               ],
               "type": "fill"
             }
@@ -4839,13 +4841,13 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "0"
+                "null"
               ],
               "type": "fill"
             }
@@ -4889,13 +4891,13 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
             {
               "params": [
-                "0"
+                "null"
               ],
               "type": "fill"
             }
@@ -4937,7 +4939,7 @@
           "groupBy": [
             {
               "params": [
-                "$__interval"
+                "5m"
               ],
               "type": "time"
             },
@@ -7038,6 +7040,6 @@
   "timezone": "",
   "title": "Weather and HVAC",
   "uid": "ZlEuQLZRk1",
-  "version": 61,
+  "version": 66,
   "weekStart": ""
 }
